@@ -1,0 +1,27 @@
+Refs,Qty,Value,Package,MPN,Description
+BT1,1,LiPo 300mAh,Pad_Battery_2x,,"1S Li-Po 602030 (6x20x30 mm) with PCM, solder pads"
+"C1, C2",2,4.7u,C_0603_1608Metric,,Charger input; Charger output / battery
+"C3, C4, C6",3,1u,C_0402_1005Metric,,LDO input; LDO output; VDD bulk
+"C5, C7, C8, C13, C14, C15, C16, C17, C18, C19, C20, C21, C22",13,100n,C_0402_1005Metric,,VDD decoupling; VDDA decoupling; NRST filter; LED row decoupling
+"C9, C10",2,12p,C_0402_1005Metric,,Crystal load
+C11,1,10n,C_0402_1005Metric,,ADC filter
+C12,1,10u,C_0603_1608Metric,,LED rail bulk
+"D1, D2",2,BAT54,D_SOD-323,BAT54W,Button -> latch OR; PA6 -> latch OR
+D3,1,RED,LED_0603_1608Metric,,Charging indicator
+J1,1,TC2030-IDC-NL,Tag-Connect_TC2030-IDC-NL_2x03_P1.27mm_Vertical,,"SWD programming pads (Tag-Connect footprint, no header)"
+J2,1,DOCK,Pad_Dock_2x,,"Charging dock contact pads (5 V, GND)"
+LED1-LED60,60,WS2812B-2020,LED_WS2812B-2020_PLCC4_2.0x2.0mm,WS2812B-2020,Addressable RGB LED 2x2 mm
+Q1,1,AO3401A,SOT-23,AO3401A,High-side P-MOSFET switch
+Q2,1,2N7002,SOT-23,2N7002,Latch driver
+"R1, R2, R3, R5, R8",5,100k,R_0402_1005Metric,,Q1 gate pull-up (off); Latch pull-down; Button pull-down; Battery divider bottom; Button divider bottom
+R4,1,33k,R_0402_1005Metric,,Button divider top
+R6,1,330,R_0402_1005Metric,,LED data series
+R7,1,62k,R_0402_1005Metric,,Battery divider top (sets 3.52 V cutoff)
+R9,1,6.8k,R_0402_1005Metric,,Charge current 1000V/R = 147 mA
+R10,1,1k,R_0402_1005Metric,,Charge LED series
+R11,1,10k,R_0402_1005Metric,,BOOT0 pull-down
+SW1,1,BTN,SW_SPST_PTS645,,Tactile button (mode / power)
+U1,1,STM32F070F6P6,TSSOP-20_4.4x6.5mm_P0.65mm,STM32F070F6P6,"Cortex-M0 MCU, TSSOP-20"
+U2,1,MCP73831-2,SOT-23-5,MCP73831T-2ACI/OT,"Li-Po charger 4.2 V, ~150 mA"
+U3,1,ME6211C33,SOT-23,ME6211C33M5G-N,"3.3 V LDO, low dropout"
+Y1,1,8MHz,Crystal_SMD_3225-4Pin_3.2x2.5mm,,"HSE 8 MHz, 3225"
