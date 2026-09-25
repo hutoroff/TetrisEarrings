@@ -5,13 +5,13 @@
 extern "C" {
 #endif
 
-//----------------------- подключим файлы ------------------------------------//
+//----------------------- includes -------------------------------------------//
 #include "ledMatrix.h"
 
-//----------------------- дефайним значения ----------------------------------//
-#define SNAKE_MAX_LEN 60 // Максимальная длина змейки (на всё поле)
+//----------------------- defines --------------------------------------------//
+#define SNAKE_MAX_LEN 60 // Maximum snake length (the whole field)
 
-// --- МАКРОСЫ ДЛЯ ТЕТРИСА (код будет думать, что переменные старые) ---
+// --- TETRIS MACROS (so the code thinks it's still using the old variables) ---
 #define gameBoard         (state.t.board)
 #define current_id        (state.t.id)
 #define current_rotation  (state.t.rot)
@@ -20,14 +20,14 @@ extern "C" {
 #define target_x          (state.t.tx)
 #define target_rot        (state.t.trot)
 
-// --- МАКРОСЫ ДЛЯ ЗМЕЙКИ ---
+// --- SNAKE MACROS ---
 #define snake             (state.s.body)
 #define snake_len         (state.s.len)
 #define food              (state.s.foods)
 #define dir_x             (state.s.dx)
 #define dir_y             (state.s.dy)
 
-//----------------------- объявим функции ------------------------------------//
+//----------------------- function declarations ------------------------------//
 void Tetris_Init(void);
 void Snake_Tick(void);
 void DrawGame(void);
@@ -44,7 +44,7 @@ uint8_t Snake_IsSafe(int8_t x, int8_t y);
 void Snake_BotLogic(void);
 void Snake_GameOverAnim(void);
 
-//----------------------- объявим структуры ----------------------------------//
+//----------------------- struct declarations --------------------------------//
 
 
 

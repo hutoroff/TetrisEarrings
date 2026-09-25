@@ -5,10 +5,10 @@
 extern "C" {
 #endif
 
-//----------------------- подключим файлы ------------------------------------//
+//----------------------- includes -------------------------------------------//
 #include "ledMatrix.h"
 
-//----------------------- дефайним значения ----------------------------------//
+//----------------------- defines --------------------------------------------//
 #define heat_map (state.f.heat)
 #define m_grid   (state.m.grid)
 #define m_heads  (state.m.heads)
@@ -20,7 +20,7 @@ extern "C" {
 
 #define rain_drops (state.r.drops)
 #define rain_splashes (state.r.splashes)
-//----------------------- объявим функции ------------------------------------//
+//----------------------- function declarations ------------------------------//
 void ModeTransition(void);
 void ShutdownAnim(void);
 void Heart_Tick(void);
@@ -35,7 +35,7 @@ void Balls_Init(void);
 void Balls_Tick(void);
 void Rain_Init(void);
 void Rain_Tick(void);
-//----------------------- объявим структуры ----------------------------------//
+//----------------------- struct declarations --------------------------------//
 
 
 

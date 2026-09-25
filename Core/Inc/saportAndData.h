@@ -5,12 +5,12 @@
 extern "C" {
 #endif
 
-//----------------------- подключим файлы ------------------------------------//
+//----------------------- includes -------------------------------------------//
 #include "stm32f0xx_hal.h"
 #include "stdint.h"
-#include <stdlib.h> // Для rand()
+#include <stdlib.h> // For rand()
 
-//----------------------- дефайним значения ----------------------------------//
+//----------------------- defines --------------------------------------------//
 #define MAX_X 6
 #define MAX_Y 10
 #define SNAKE_MAX_LEN 60
@@ -24,23 +24,23 @@ extern "C" {
 #define ReadKey_Pin GPIO_PIN_7
 #define ReadKey_GPIO_Port GPIOA
 
-//----------------------- объявим структуры ----------------------------------//
+//----------------------- struct declarations --------------------------------//
 typedef struct {
     int8_t x;
     int8_t y;
 } Point;
 
 typedef struct {
-    int16_t x;   // Позиция X (в сотых долях)
-    int16_t y;   // Позиция Y (в сотых долях)
-    int16_t dx;  // Скорость X
-    int16_t dy;  // Скорость Y
-    uint8_t r, g, b; // Цвет мячика
+    int16_t x;   // X position (in hundredths)
+    int16_t y;   // Y position (in hundredths)
+    int16_t dx;  // X velocity
+    int16_t dy;  // Y velocity
+    uint8_t r, g, b; // Ball color
 } Ball;
 
-// 2. Создаем общий буфер памяти для ВСЕХ режимов
+// 2. Create a shared memory buffer for ALL modes
 typedef union {
-    // Память для Тетриса
+    // Tetris memory
     struct {
         uint8_t board[MAX_Y][MAX_X];
         int8_t id;
@@ -51,7 +51,7 @@ typedef union {
         int8_t trot;
     } t;
 
-    // Память для Змейки
+    // Snake memory
     struct {
         Point body[SNAKE_MAX_LEN];
         uint8_t len;
@@ -60,46 +60,46 @@ typedef union {
         int8_t dy;
     } s;
 
-    // Память для Огня
+    // Fire memory
     struct {
         uint8_t heat[MAX_Y][MAX_X];
     } f;
 
-    // Память для Матрицы
+    // Matrix memory
     struct {
         uint8_t grid[MAX_Y][MAX_X];
         int8_t heads[MAX_X];
     } m;
     struct {
 		uint8_t brightness[MAX_Y][MAX_X];
-		uint8_t state[MAX_Y][MAX_X]; // 0-выкл, 1,3,5-разгорается, 2,4,6-тухнет
+		uint8_t state[MAX_Y][MAX_X]; // 0 - off, 1,3,5 - brightening, 2,4,6 - fading
 	} st;
-	struct {                         // Память для Пинг-Понга (занимает всего 33 байта!)
+	struct {                         // Ping-Pong memory (only 33 bytes!)
 		Ball balls[3];
 	} p;
-	struct {                // Память для Дождя (занимает 104 байта)
+	struct {                // Rain memory (104 bytes)
 		struct {
-			int8_t x;       // Колонка (0-5)
-			int16_t y;      // Высота в субпикселях
-			int16_t speed;  // Скорость падения
-			uint8_t active; // Существует ли капля
-		} drops[4];         // Максимум 4 падающие капли одновременно
+			int8_t x;       // Column (0-5)
+			int16_t y;      // Height in sub-pixels
+			int16_t speed;  // Fall speed
+			uint8_t active; // Whether the drop exists
+		} drops[4];         // Up to 4 falling drops at once
 
 		struct {
-			int16_t x;      // Позиция X (субпиксели)
-			int16_t y;      // Позиция Y (субпиксели)
-			int16_t dx;     // Вектор полета по X
-			int16_t dy;     // Вектор полета по Y (будет уменьшаться гравитацией)
-			uint8_t life;   // Яркость / Жизнь брызги
-			uint8_t active; // Существует ли брызга
-		} splashes[8];      // Максимум 8 брызг
+			int16_t x;      // X position (sub-pixels)
+			int16_t y;      // Y position (sub-pixels)
+			int16_t dx;     // X flight vector
+			int16_t dy;     // Y flight vector (reduced by gravity)
+			uint8_t life;   // Splash brightness / life
+			uint8_t active; // Whether the splash exists
+		} splashes[8];      // Up to 8 splashes
 	} r;
 } AppState;
 
 extern AppState state;
-//----------------------- объявим функции ------------------------------------//
+//----------------------- function declarations ------------------------------//
 
-//------------------------------ примечания ------------------------------------------//
+//------------------------------ notes -----------------------------------------------//
 
 
 #ifdef __cplusplus

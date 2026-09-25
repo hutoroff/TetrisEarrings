@@ -1,6 +1,6 @@
 # ✨ TetrisEarrings
 
-Серьги на светодиодной матрице 6×10 с девятью завораживающими анимированными режимами — от пинг-понга и тетриса с автономным ботом до огня, звёздного неба и дождя на стекле.
+Earrings built on a 6×10 LED matrix with nine mesmerizing animated modes — from ping-pong and Tetris with an autonomous bot to fire, a starry sky, and rain on glass.
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 ![MCU](https://img.shields.io/badge/MCU-STM32F070F6-03234B)
@@ -9,85 +9,85 @@
 ![LEDs](https://img.shields.io/badge/matrix-6×10%20WS2812-orange)
 
 <p align="center">
-  <img src="20260912_095812.jpg" width="420" alt="TetrisEarrings в работе">
+  <img src="20260912_095812.jpg" width="420" alt="TetrisEarrings in action">
 </p>
 
-## О проекте
+## About
 
-Маленькая плата на STM32 прячется в серьге и управляет матрицей из 60 адресных RGB-светодиодов (6 столбцов × 10 строк). Одна кнопка переключает режимы вручную, либо они сами сменяют друг друга каждые 45 секунд. Устройство работает от аккумулятора и умеет само выключаться — как по долгому нажатию кнопки, так и при разряде батареи, с небольшой прощальной анимацией.
+A tiny STM32 board hidden inside the earring drives a matrix of 60 addressable RGB LEDs (6 columns × 10 rows). A single button switches modes manually, or they cycle on their own every 45 seconds. The device runs on a battery and can power itself off — either on a long button press or when the battery runs low — with a short farewell animation.
 
-## Возможности
+## Features
 
-- 🎮 **9 режимов** — от классических игр до генеративных визуальных эффектов
-- 🧠 **Тетрис с "умным" ботом** — фигура не падает как попало: перед каждым падением бот перебирает все повороты и колонки и выбирает размещение по эвристике (минимум дыр, минимум высоты и перепадов, максимум собранных линий)
-- 🐍 **Змейка с автономным ботом** — сама выбирает путь до еды и не врезается в себя
-- 🎨 **Субпиксельное сглаживание** — мячики в пинг-понге двигаются плавно, а не скачками между светодиодами
-- 🔋 **Умное питание** — автослежение за напряжением батареи и автовыключение при разряде
-- 📺 **Анимация выключения** — экран "схлопывается" в точку и гаснет, как у старых кинескопных телевизоров
-- 🧩 **Всё в 6 КБ RAM** — все режимы делят одну и ту же область памяти (union), а не держат данные каждого режима отдельно
+- 🎮 **9 modes** — from classic games to generative visual effects
+- 🧠 **Tetris with a "smart" bot** — pieces don't just fall randomly: before each drop the bot tries every rotation and column and picks the placement using a heuristic (fewest holes, lowest height and bumpiness, most cleared lines)
+- 🐍 **Snake with an autonomous bot** — finds its own path to the food and never runs into itself
+- 🎨 **Sub-pixel smoothing** — the ping-pong balls move smoothly instead of jumping from LED to LED
+- 🔋 **Smart power management** — continuous battery voltage monitoring and automatic shutdown on low battery
+- 📺 **Power-off animation** — the screen "collapses" into a dot and fades out, like an old CRT TV
+- 🧩 **Everything in 6 KB of RAM** — all modes share the same memory region (a union) instead of each mode keeping its own data
 
-## Режимы
+## Modes
 
-| № | Режим | Описание |
+| # | Mode | Description |
 |---|---|---|
-| 0 | Пинг-понг | Три мячика летают и сталкиваются друг с другом, при ударе меняют цвет |
-| 1 | Тетрис | Автономная игра с ботом, который осмысленно выбирает, куда положить фигуру |
-| 2 | Змейка | Автономная игра, бот сам ведёт змейку к еде |
-| 3 | Сердце | Плавно пульсирующее сердце |
-| 4 | Огонь | Процедурная имитация живого пламени с искрами |
-| 5 | Матрица | Падающие зелёные "цифровые капли" в духе фильма "Матрица" |
-| 6 | Звёздное небо | Редкие вспышки звёзд разных оттенков с плавным угасанием |
-| 7 | Радуга | Диагональная переливающаяся радужная волна |
-| 8 | Дождь на стекле | Капли стекают вниз и разлетаются брызгами при ударе о дно |
+| 0 | Ping-Pong | Three balls fly around and bounce off each other, changing color on impact |
+| 1 | Tetris | Autonomous game with a bot that deliberately chooses where to place each piece |
+| 2 | Snake | Autonomous game; the bot steers the snake to the food by itself |
+| 3 | Heart | A smoothly pulsing heart |
+| 4 | Fire | Procedural simulation of a living flame with sparks |
+| 5 | Matrix | Falling green "digital rain" in the style of *The Matrix* |
+| 6 | Starry Sky | Sparse twinkling stars of different hues that slowly fade out |
+| 7 | Rainbow | A shimmering diagonal rainbow wave |
+| 8 | Rain on Glass | Drops trickle down and burst into splashes when they hit the bottom |
 
-Короткое нажатие кнопки — следующий режим, удержание около секунды — выключение (с анимацией). Без нажатий режимы сами сменяют друг друга каждые 45 секунд.
+Short button press — next mode; hold for about a second — power off (with animation). With no presses, modes cycle automatically every 45 seconds.
 
-## Железо
+## Hardware
 
-| Параметр | Значение |
+| Parameter | Value |
 |---|---|
-| Микроконтроллер | STM32F070F6Px (Cortex-M0, 48 МГц, 32 КБ Flash, 6 КБ RAM) |
-| Матрица | 6×10 (60 шт.) адресных RGB-светодиодов, WS2812-совместимый протокол |
-| Линия данных матрицы | PA9 (TIM1_CH2 + DMA, побитовое ШИМ-кодирование сигнала) |
-| Кнопка | PA7 |
-| Управление питанием | PA6 (самоблокировка/отключение питания платы) |
-| Контроль батареи | PA1 (ADC1_IN1), автовыключение при разряде |
-| Среда разработки | STM32CubeIDE 1.17.0, GNU Arm Embedded Toolchain 12.3.rel1 |
+| Microcontroller | STM32F070F6Px (Cortex-M0, 48 MHz, 32 KB Flash, 6 KB RAM) |
+| Matrix | 6×10 (60 pcs) addressable RGB LEDs, WS2812-compatible protocol |
+| Matrix data line | PA9 (TIM1_CH2 + DMA, per-bit PWM signal encoding) |
+| Button | PA7 |
+| Power control | PA6 (board power self-latch / shutdown) |
+| Battery monitoring | PA1 (ADC1_IN1), auto-shutdown on low battery |
+| Development environment | STM32CubeIDE 1.17.0, GNU Arm Embedded Toolchain 12.3.rel1 |
 
-Светодиоды матрицы соединены «змейкой»: чётные строки идут в одну сторону, нечётные — в другую (см. `GetLEDIndex()` в [ledMatrix.c](Core/Src/ledMatrix.c)).
+The matrix LEDs are wired in a "serpentine" layout: even rows run in one direction, odd rows in the other (see `GetLEDIndex()` in [ledMatrix.c](Core/Src/ledMatrix.c)).
 
-## Электроника (Altium)
+## Electronics (Altium)
 
-Исходники платы (схема, разводка, BOM) в Altium Designer: **[ссылка появится здесь]**
+Board sources (schematic, layout, BOM) in Altium Designer: **[link coming soon]**
 
-> Когда проект будет выложен на Google Drive — замените эту строку на ссылку.
+> Once the project is uploaded to Google Drive, replace this line with the link.
 
-## Сборка и прошивка
+## Building and Flashing
 
-1. Клонировать репозиторий и открыть папку проекта в **STM32CubeIDE 1.17.0** (File → Import → General → Existing Projects into Workspace).
-2. Выбрать конфигурацию сборки:
-   - **Debug** — полные отладочные символы, оптимизация `-Og` (специально подобрана, чтобы прошивка помещалась в 32 КБ флеша чипа и при этом хорошо отлаживалась);
-   - **Release** — сборка `-Os`, минимальный размер.
+1. Clone the repository and open the project folder in **STM32CubeIDE 1.17.0** (File → Import → General → Existing Projects into Workspace).
+2. Choose a build configuration:
+   - **Debug** — full debug symbols, `-Og` optimization (chosen specifically so the firmware fits into the chip's 32 KB of flash while still being easy to debug);
+   - **Release** — `-Os` build, minimal size.
 3. **Project → Build Project**.
-4. Прошить через ST-Link: **Run → Debug** (или **Run**) при подключенном программаторе.
+4. Flash via ST-Link: **Run → Debug** (or **Run**) with the programmer connected.
 
-## Структура проекта
+## Project Structure
 
 ```
 Core/
-├── Inc/                  # Заголовки
-│   ├── effects.h          # Визуальные эффекты
-│   ├── games.h            # Тетрис и Змейка
-│   ├── ledMatrix.h        # Драйвер WS2812
-│   └── saportAndData.h    # Общее состояние (пины, общая память режимов)
+├── Inc/                  # Headers
+│   ├── effects.h          # Visual effects
+│   ├── games.h            # Tetris and Snake
+│   ├── ledMatrix.h        # WS2812 driver
+│   └── saportAndData.h    # Shared state (pins, shared mode memory)
 └── Src/
-    ├── main.c              # Точка входа, инициализация периферии
-    ├── work.c               # Диспетчер режимов, кнопка, АЦП, автовыключение
-    ├── effects.c             # Пинг-понг, Огонь, Матрица, Звёзды, Радуга, Дождь, Сердце
-    ├── games.c               # Тетрис (с ИИ-ботом) и Змейка (с автономным ботом)
-    └── ledMatrix.c            # Драйвер адресной матрицы поверх TIM1 + DMA
+    ├── main.c              # Entry point, peripheral initialization
+    ├── work.c               # Mode dispatcher, button, ADC, auto-shutdown
+    ├── effects.c             # Ping-Pong, Fire, Matrix, Stars, Rainbow, Rain, Heart
+    ├── games.c               # Tetris (with AI bot) and Snake (with autonomous bot)
+    └── ledMatrix.c            # Addressable matrix driver on top of TIM1 + DMA
 ```
 
-## Лицензия
+## License
 
-Проект распространяется под лицензией [MIT](LICENSE).
+This project is distributed under the [MIT](LICENSE) license.
