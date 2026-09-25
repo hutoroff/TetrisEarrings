@@ -262,6 +262,9 @@ def pin_screen(sym, pnum, X, Y, rot, mirror=""):
     raise KeyError(pnum)
 
 
+NOT_IN_BOM = {"J1", "J2"}          # bare copper pads (Tag-Connect, dock contacts), nothing to buy
+
+
 class Sheet:
     def __init__(self):
         self.parts, self.wires, self.labels, self.ncs, self.power = [], [], [], [], []
@@ -288,7 +291,7 @@ class Sheet:
             props.append(f'    (property "MPN" "{mpn}" (at {X:g} {Y:g} 0) {FONT_H})')
         pins = "\n".join(f'    (pin "{p[0]}" (uuid "{uid()}"))' for p in s["pins"])
         return (f'  (symbol (lib_id "{PROJECT}:{sym}") (at {X:g} {Y:g} {rot}){f" (mirror {mirror})" if mirror else ""} (unit 1) '
-                f'(exclude_from_sim no) (in_bom {"no" if ref.startswith("#") else "yes"}) (on_board yes) (dnp no)\n'
+                f'(exclude_from_sim no) (in_bom {"no" if ref.startswith("#") or ref in NOT_IN_BOM else "yes"}) (on_board yes) (dnp no)\n'
                 f'    (uuid "{uid()}")\n' + "\n".join(props) + "\n" + pins + "\n"
                 f'    (instances (project "{PROJECT}" (path "/{ROOT_UUID}" (reference "{ref}") (unit 1))))\n  )')
 
@@ -483,7 +486,7 @@ sh.part("C7", "C", 210, 60, 0, "100n", C0402, {"1": "+3V3", "2": "GND"}, desc="V
 sh.part("R11", "R", 180, 100, 0, "10k", R0402, {"1": "BOOT0", "2": "GND"}, desc="BOOT0 pull-down")
 sh.part("C8", "C", 200, 110, 0, "100n", C0402, {"1": "NRST", "2": "GND"}, desc="NRST filter")
 sh.part("Y1", "Crystal", 190, 145, 0, "8MHz", "Crystal:Crystal_SMD_3225-4Pin_3.2x2.5mm",
-        {"1": "OSC_IN", "3": "OSC_OUT", "2": "GND", "4": "GND"}, desc="HSE 8 MHz, 3225")
+        {"1": "OSC_OUT", "3": "OSC_IN", "2": "GND", "4": "GND"}, desc="HSE 8 MHz, 3225")   # non-polar; order suits the PCB
 sh.part("C9", "C", 175, 160, 0, "12p", C0402, {"1": "OSC_IN", "2": "GND"}, desc="Crystal load")
 sh.part("C10", "C", 205, 160, 0, "12p", C0402, {"1": "OSC_OUT", "2": "GND"}, desc="Crystal load")
 sh.part("J1", "TC2030_SWD", 200, 200, 0, "TC2030-IDC-NL", "Connector:Tag-Connect_TC2030-IDC-NL_2x03_P1.27mm_Vertical",
@@ -554,7 +557,7 @@ with open(os.path.join(HERE, f"{PROJECT}.kicad_pro"), "w") as f:
 
 # BOM grouped by (value, footprint)
 groups, descs = {}, {}
-for ref, value, fp, mpn, desc in sh.bom:
+for ref, value, fp, mpn, desc in (b for b in sh.bom if b[0] not in NOT_IN_BOM):
     groups.setdefault((value, fp, mpn), []).append(ref)
     descs.setdefault((value, fp, mpn), []).append(desc)
 

@@ -8,8 +8,6 @@ C11,1,10n,C_0402_1005Metric,,ADC filter
 C12,1,10u,C_0603_1608Metric,,LED rail bulk
 "D1, D2",2,BAT54,D_SOD-323,BAT54W,Button -> latch OR; PA6 -> latch OR
 D3,1,RED,LED_0603_1608Metric,,Charging indicator
-J1,1,TC2030-IDC-NL,Tag-Connect_TC2030-IDC-NL_2x03_P1.27mm_Vertical,,"SWD programming pads (Tag-Connect footprint, no header)"
-J2,1,DOCK,Pad_Dock_2x,,"Charging dock contact pads (5 V, GND)"
 LED1-LED60,60,WS2812B-2020,LED_WS2812B-2020_PLCC4_2.0x2.0mm,WS2812B-2020,Addressable RGB LED 2x2 mm
 Q1,1,AO3401A,SOT-23,AO3401A,High-side P-MOSFET switch
 Q2,1,2N7002,SOT-23,2N7002,Latch driver

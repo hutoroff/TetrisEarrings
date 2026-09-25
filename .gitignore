@@ -5,3 +5,6 @@ CMakeLists*
 *-backups/
 *.kicad_prl
 fp-info-cache
+__pycache__/
+.DS_Store
+hardware/logs/
