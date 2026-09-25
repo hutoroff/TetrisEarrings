@@ -33,8 +33,8 @@
     )
   )
   (symbol "Crystal" (pin_numbers hide) (pin_names (offset 0) hide) (exclude_from_sim no) (in_bom yes) (on_board yes)
-    (property "Reference" "Y" (at 0 4.445 0) (effects (font (size 1.27 1.27))))
-    (property "Value" "Crystal" (at 0 -4.445 0) (effects (font (size 1.27 1.27))))
+    (property "Reference" "Y" (at 5.08 1.27 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "Crystal" (at 5.08 -1.27 0) (effects (font (size 1.27 1.27))))
     (property "Footprint" "" (at 0 0 0) (effects (font (size 1.27 1.27)) hide))
     (property "Datasheet" "~" (at 0 0 0) (effects (font (size 1.27 1.27)) hide))
     (symbol "Crystal_0_1"
@@ -46,7 +46,9 @@
     )
     (symbol "Crystal_1_1"
       (pin passive line (at -3.81 0 0) (length 0.001) (name "1" (effects (font (size 1.27 1.27)))) (number "1" (effects (font (size 1.27 1.27)))))
-      (pin passive line (at 3.81 0 180) (length 0.001) (name "2" (effects (font (size 1.27 1.27)))) (number "2" (effects (font (size 1.27 1.27)))))
+      (pin passive line (at 3.81 0 180) (length 0.001) (name "3" (effects (font (size 1.27 1.27)))) (number "3" (effects (font (size 1.27 1.27)))))
+      (pin passive line (at 0 -3.81 90) (length 1.27) (name "GND" (effects (font (size 1.27 1.27)))) (number "2" (effects (font (size 1.27 1.27)))))
+      (pin passive line (at 0 3.81 270) (length 1.27) (name "GND" (effects (font (size 1.27 1.27)))) (number "4" (effects (font (size 1.27 1.27)))))
     )
   )
   (symbol "D_Schottky" (pin_numbers hide) (pin_names (offset 0) hide) (exclude_from_sim no) (in_bom yes) (on_board yes)

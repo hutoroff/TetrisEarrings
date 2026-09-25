@@ -20,7 +20,7 @@ R7,1,62k,R_0402_1005Metric,,Battery divider top (sets 3.52 V cutoff)
 R9,1,6.8k,R_0402_1005Metric,,Charge current 1000V/R = 147 mA
 R10,1,1k,R_0402_1005Metric,,Charge LED series
 R11,1,10k,R_0402_1005Metric,,BOOT0 pull-down
-SW1,1,BTN,SW_SPST_PTS645,,Tactile button (mode / power)
+SW1,1,BTN,SW_Push_1P1T_NO_CK_KMR2,,Tactile button (mode / power)
 U1,1,STM32F070F6P6,TSSOP-20_4.4x6.5mm_P0.65mm,STM32F070F6P6,"Cortex-M0 MCU, TSSOP-20"
 U2,1,MCP73831-2,SOT-23-5,MCP73831T-2ACI/OT,"Li-Po charger 4.2 V, ~150 mA"
 U3,1,ME6211C33,SOT-23,ME6211C33M5G-N,"3.3 V LDO, low dropout"

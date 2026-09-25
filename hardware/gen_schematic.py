@@ -113,8 +113,10 @@ defsym("Crystal", "Y", [rect(-1.143, -2.54, 1.143, 2.54),
                         poly((-1.905, -1.905), (-1.905, 1.905)), poly((1.905, -1.905), (1.905, 1.905)),
                         poly((-3.81, 0), (-1.905, 0)), poly((1.905, 0), (3.81, 0))],
        [pin("1", "1", "passive", -3.81, 0, 0, 0.001),
-        pin("2", "2", "passive", 3.81, 0, 180, 0.001)],
-       ref_at=(0, 4.445), val_at=(0, -4.445), names=False)
+        pin("3", "3", "passive", 3.81, 0, 180, 0.001),
+        pin("2", "GND", "passive", 0, -3.81, 90, 1.27),      # 3225 4-pad: 2 and 4 are the case
+        pin("4", "GND", "passive", 0, 3.81, 270, 1.27)],
+       ref_at=(5.08, 1.27), val_at=(5.08, -1.27), names=False)
 
 defsym("Battery_Cell", "BT", [poly((-2.54, 1.27), (2.54, 1.27)), poly((-1.27, -0.254), (1.27, -0.254)),
                               poly((-1.27, -0.254), (-1.27, -0.762), (1.27, -0.762), (1.27, -0.254), fill="outline"),
@@ -362,6 +364,46 @@ class Sheet:
         self.labels.append(f'  (text "{s}" (exclude_from_sim no) (at {x:g} {y:g} 0) '
                            f'(effects (font (size {size} {size}) bold) (justify left bottom)) (uuid "{uid()}"))')
 
+    def nets(self):
+        """{netname: [(ref, pin), ...]} from the drawn geometry (wires, labels, power symbols)."""
+        import re
+        par = {}
+
+        def find(a):
+            par.setdefault(a, a)
+            while par[a] != a:
+                par[a] = par[par[a]]
+                a = par[a]
+            return a
+
+        def pt(x, y):
+            return (round(float(x), 2), round(float(y), 2))
+
+        for a, b, c, d in re.findall(r'\(xy ([-\d.]+) ([-\d.]+)\) \(xy ([-\d.]+) ([-\d.]+)\)', "\n".join(self.wires)):
+            par[find(pt(a, b))] = find(pt(c, d))
+        names = {}
+        for n, x, y in re.findall(r'\(label "([^"]+)" \(at ([-\d.]+) ([-\d.]+)', "\n".join(self.labels)):
+            names[pt(x, y)] = n
+        for n, x, y in re.findall(r'lib_id "[^:]+:PWR_([^"]+)"\) \(at ([-\d.]+) ([-\d.]+)', "\n".join(self.power)):
+            if n != "FLAG":
+                names[pt(x, y)] = n
+        for p, n in names.items():                       # same name => same net
+            par[find(p)] = find(("name", n))
+        ncs = {pt(x, y) for x, y in re.findall(r'no_connect \(at ([-\d.]+) ([-\d.]+)', "\n".join(self.ncs))}
+        nets = {}
+        for ref, (sym, X, Y, rot, mirror) in self.placed.items():
+            for num, *_ in SYMS[sym]["pins"]:
+                at, _ = pin_screen(sym, num, X, Y, rot, mirror)
+                at = pt(*at)
+                if at in ncs:
+                    continue
+                nets.setdefault(find(at), []).append((ref, num))
+        out = {}
+        for root, pins in nets.items():
+            name = next((n for p, n in names.items() if find(p) == root), None) or f"Net-({pins[0][0]}-Pad{pins[0][1]})"
+            out[name] = sorted(pins)
+        return out
+
     def render(self):
         libs = "\n".join(lib_symbol(n) for n in sorted(self.used))
         body = "\n".join(self.parts + self.power + self.wires + self.labels + self.ncs)
@@ -415,7 +457,7 @@ sh.part("D1", "D_Schottky", 65, 165, 0, "BAT54", SOD323, {"1": "LATCH", "2": "KE
         mpn="BAT54W", desc="Button -> latch OR", mirror="y")
 sh.part("D2", "D_Schottky", 65, 180, 0, "BAT54", SOD323, {"1": "LATCH", "2": "PWR_ON"},
         mpn="BAT54W", desc="PA6 -> latch OR", mirror="y")
-sh.part("SW1", "SW_Push", 40, 140, 0, "BTN", "Button_Switch_SMD:SW_SPST_PTS645",
+sh.part("SW1", "SW_Push", 40, 140, 0, "BTN", "Button_Switch_SMD:SW_Push_1P1T_NO_CK_KMR2",
         {"1": "VBAT", "2": "KEY"}, desc="Tactile button (mode / power)")
 sh.part("R3", "R", 50, 155, 0, "100k", R0402, {"1": "KEY", "2": "GND"}, desc="Button pull-down")
 
@@ -441,7 +483,7 @@ sh.part("C7", "C", 210, 60, 0, "100n", C0402, {"1": "+3V3", "2": "GND"}, desc="V
 sh.part("R11", "R", 180, 100, 0, "10k", R0402, {"1": "BOOT0", "2": "GND"}, desc="BOOT0 pull-down")
 sh.part("C8", "C", 200, 110, 0, "100n", C0402, {"1": "NRST", "2": "GND"}, desc="NRST filter")
 sh.part("Y1", "Crystal", 190, 145, 0, "8MHz", "Crystal:Crystal_SMD_3225-4Pin_3.2x2.5mm",
-        {"1": "OSC_IN", "2": "OSC_OUT"}, desc="HSE 8 MHz, 3225")
+        {"1": "OSC_IN", "3": "OSC_OUT", "2": "GND", "4": "GND"}, desc="HSE 8 MHz, 3225")
 sh.part("C9", "C", 175, 160, 0, "12p", C0402, {"1": "OSC_IN", "2": "GND"}, desc="Crystal load")
 sh.part("C10", "C", 205, 160, 0, "12p", C0402, {"1": "OSC_OUT", "2": "GND"}, desc="Crystal load")
 sh.part("J1", "TC2030_SWD", 200, 200, 0, "TC2030-IDC-NL", "Connector:Tag-Connect_TC2030-IDC-NL_2x03_P1.27mm_Vertical",
@@ -496,11 +538,14 @@ with open(os.path.join(HERE, "sym-lib-table"), "w") as f:
             f'(uri "${{KIPRJMOD}}/{PROJECT}.kicad_sym") (options "") (descr ""))\n)\n')
 
 with open(os.path.join(HERE, f"{PROJECT}.kicad_pro"), "w") as f:
-    f.write('{\n  "board": {"design_settings": {}, "layer_presets": [], "viewports": []},\n'
+    f.write('{\n  "board": {"design_settings": {"rules": {"min_clearance": 0.127, "min_track_width": 0.127, '
+            '"min_via_diameter": 0.45, "min_via_annular_width": 0.1, "min_through_hole_diameter": 0.2, '
+            '"min_hole_to_hole": 0.25, "min_copper_edge_clearance": 0.3, "solder_mask_to_copper_clearance": 0.0}}, '
+            '"layer_presets": [], "viewports": []},\n'
             '  "libraries": {"pinned_footprint_libs": [], "pinned_symbol_libs": []},\n'
             f'  "meta": {{"filename": "{PROJECT}.kicad_pro", "version": 1}},\n'
-            '  "net_settings": {"classes": [{"name": "Default", "clearance": 0.2, "track_width": 0.25, '
-            '"via_diameter": 0.6, "via_drill": 0.3, "wire_width": 6, "bus_width": 12, "line_style": 0, '
+            '  "net_settings": {"classes": [{"name": "Default", "clearance": 0.15, "track_width": 0.15, '
+            '"via_diameter": 0.5, "via_drill": 0.3, "wire_width": 6, "bus_width": 12, "line_style": 0, '
             '"pcb_color": "rgba(0, 0, 0, 0.000)", "schematic_color": "rgba(0, 0, 0, 0.000)"}], '
             '"meta": {"version": 3}, "net_colors": null, "netclass_assignments": null, "netclass_patterns": []},\n'
             '  "pcbnew": {"page_layout_descr_file": ""},\n'
